@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # ThingSpeak Configuration
 CHANNEL_ID = "2572257"
@@ -105,9 +105,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-def fetch_data(results):
+def fetch_data(start_date=None, end_date=None):
     try:
-        response = requests.get(BASE_URL, params={"results": results})
+        params = {"results": 8000}  # Maximum results to ensure we get enough data
+        if start_date and end_date:
+            params.update({
+                "start": start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                "end": end_date.strftime("%Y-%m-%d %H:%M:%S")
+            })
+        
+        response = requests.get(BASE_URL, params=params)
         response.raise_for_status()
         data = response.json()
         feeds = data.get("feeds", [])
@@ -177,21 +184,50 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
-    # Sidebar Configuration
+       # Sidebar Configuration
     with st.sidebar:
-        st.image("cropped-logo-uin.png", width=100)
+        # Create two columns for the logos
+        logo_col1, logo_col2 = st.columns(2)
+        
+        with logo_col1:
+            st.image("cropped-logo-uin.png", width=100)
+        
+        with logo_col2:
+            st.image("BRIN.png", width=100)
+            
         st.title("Dashboard Controls")
-        results = st.slider("Data Points to Display:", 
-                          min_value=100, 
-                          max_value=1000, 
-                          value=650,
-                          step=50)
+        
+        # Time range selection
+        time_range = st.selectbox(
+            "Select Time Range",
+            ["Last Hour", "Last 24 Hours", "Last 7 Days", "Last 30 Days", "Custom Range"]
+        )
+        
+        if time_range == "Custom Range":
+            end_date = st.date_input("End Date", datetime.now())
+            end_time = st.time_input("End Time", datetime.now().time())
+            start_date = st.date_input("Start Date", end_date - timedelta(days=7))
+            start_time = st.time_input("Start Time", datetime.now().time())
+            
+            start_datetime = datetime.combine(start_date, start_time)
+            end_datetime = datetime.combine(end_date, end_time)
+        else:
+            end_datetime = datetime.now()
+            if time_range == "Last Hour":
+                start_datetime = end_datetime - timedelta(hours=1)
+            elif time_range == "Last 24 Hours":
+                start_datetime = end_datetime - timedelta(days=1)
+            elif time_range == "Last 7 Days":
+                start_datetime = end_datetime - timedelta(days=7)
+            else:  # Last 30 Days
+                start_datetime = end_datetime - timedelta(days=30)
+        
         st.button("🔄 Refresh Data")
 
     # Fetch and process data
-    data = fetch_data(results)
+    data = fetch_data(start_datetime, end_datetime)
     if data.empty:
-        st.error("⚠️ No data available!")
+        st.error("⚠️ No data available for the selected time range!")
         return
 
     # Current Metrics Section
@@ -319,7 +355,7 @@ def main():
     st.markdown("""
         <div style="text-align: center; margin-top: 2rem; padding: 1rem; background-color: var(--surface-color); border-radius: 10px;">
             <p>Last Updated: {}</p>
-            <p>Smart Soil Monitoring System v2.0</p>
+            <p>ARDIANSYAH 1207070018</p>
         </div>
     """.format(datetime.now().strftime("%Y-%m-%d %H:%M:%S")), unsafe_allow_html=True)
 
