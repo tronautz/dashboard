@@ -175,6 +175,36 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     
     return fig
 
+def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=None):
+    fig = px.area(
+        data,
+        x=x_col,
+        y=y_col,
+        title=title,
+        markers=True  # Menambahkan titik pada data chart
+    )
+    
+    fig.update_traces(mode='lines+markers')  # Menampilkan garis dan titik
+    fig.update_layout(
+        title_x=0.5,
+        title_font_size=20,
+        xaxis_title="Time",
+        yaxis_title=y_label,
+        template="plotly_dark",
+        height=400,
+        margin=dict(l=20, r=20, t=40, b=20),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+    )
+    
+    if range_y:
+        fig.update_yaxes(range=range_y)
+    
+    if color_scheme:
+        fig.update_traces(line_color=color_scheme)
+    
+    return fig
+
 def main():
     # Dashboard Header
     st.markdown("""
@@ -200,7 +230,7 @@ def main():
         # Time range selection
         time_range = st.selectbox(
             "Select Time Range",
-            ["Last Hour", "Last 24 Hours", "Last 7 Days", "Last 30 Days", "Custom Range"]
+            ["Last 24 Hours", "Last 2 Days", "Last 3 Days", "Last 4 Days", "Last 5 Days", "Last 6 Days", "Last 7 Days", "Last 14 Days", "Last 30 Days", "Custom Range"]
         )
         
         if time_range == "Custom Range":
@@ -213,12 +243,22 @@ def main():
             end_datetime = datetime.combine(end_date, end_time)
         else:
             end_datetime = datetime.now()
-            if time_range == "Last Hour":
-                start_datetime = end_datetime - timedelta(hours=1)
-            elif time_range == "Last 24 Hours":
+            if time_range == "Last 24 Hours":
                 start_datetime = end_datetime - timedelta(days=1)
+            elif time_range == "Last 2 Days":
+                start_datetime = end_datetime - timedelta(days=2)
+            elif time_range == "Last 3 Days":
+                start_datetime = end_datetime - timedelta(days=3)
+            elif time_range == "Last 4 Days":
+                start_datetime = end_datetime - timedelta(days=4)
+            elif time_range == "Last 5 Days":
+                start_datetime = end_datetime - timedelta(days=5)
+            elif time_range == "Last 6 Days":
+                start_datetime = end_datetime - timedelta(days=6)
             elif time_range == "Last 7 Days":
                 start_datetime = end_datetime - timedelta(days=7)
+            elif time_range == "Last 14 Days":
+                start_datetime = end_datetime - timedelta(days=14)
             else:  # Last 30 Days
                 start_datetime = end_datetime - timedelta(days=30)
         
