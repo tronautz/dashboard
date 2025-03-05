@@ -321,7 +321,7 @@ def main():
             "Soil Moisture Trends",
             "Moisture (%)",
             "#00BCD4",
-            [60, 80]
+            [60, 70]
         )
         st.plotly_chart(moisture_chart, use_container_width=True)
 
@@ -331,7 +331,7 @@ def main():
             "Temperature Variations",
             "Temperature (°C)",
             "#FF5722",
-            [22, 26]
+            [24, 26]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
 
@@ -343,7 +343,7 @@ def main():
             "pH Level Changes",
             "pH Level",
             "#4CAF50",
-            [0, 14]
+            [0, 8]
         )
         st.plotly_chart(ph_chart, use_container_width=True)
 
@@ -353,7 +353,7 @@ def main():
             "Soil Conductivity",
             "Conductivity (µS/cm)",
             "#FFC107",
-            [40, 50]
+            [40, 45]
         )
         st.plotly_chart(conductivity_chart, use_container_width=True)
 
@@ -377,7 +377,7 @@ def main():
             "Phosphorus Levels",
             "Phosphorus (mg/L)",
             "#E91E63",
-            [190, 400]
+            [300, 400]
         )
         st.plotly_chart(phosphorus_chart, use_container_width=True)
 
@@ -387,7 +387,7 @@ def main():
             "Kalium Levels",
             "Kalium (mg/L)",
             "#3F51B5",
-            [190, 400]
+            [300, 400]
         )
         st.plotly_chart(kalium_chart, use_container_width=True)
 
