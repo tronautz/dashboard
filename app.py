@@ -353,7 +353,7 @@ def main():
             "Soil Conductivity",
             "Conductivity (µS/cm)",
             "#FFC107",
-            [40, 65]
+            [40, 50]
         )
         st.plotly_chart(conductivity_chart, use_container_width=True)
 
