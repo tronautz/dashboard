@@ -367,7 +367,7 @@ def main():
             "Nitrogen Levels",
             "Nitrogen (mg/L)",
             "#9C27B0",
-            [200, 300]
+            [100, 300]
         )
         st.plotly_chart(nitrogen_chart, use_container_width=True)
 
