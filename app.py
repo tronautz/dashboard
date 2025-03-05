@@ -331,7 +331,7 @@ def main():
             "Temperature Variations",
             "Temperature (°C)",
             "#FF5722",
-            [24, 30]
+            [24, 27]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
 
