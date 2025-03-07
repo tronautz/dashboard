@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
+import base64
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime, timedelta
 
@@ -175,16 +176,22 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     
     return fig
 
+def create_download_button(data, filename, button_text):
+    csv = data.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv">{button_text}</a>'
+    return href
+
 def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=None):
     fig = px.area(
         data,
         x=x_col,
         y=y_col,
         title=title,
-        markers=True  # Menambahkan titik pada data chart
+        markers=True
     )
     
-    fig.update_traces(mode='lines+markers')  # Menampilkan garis dan titik
+    fig.update_traces(mode='lines+markers')
     fig.update_layout(
         title_x=0.5,
         title_font_size=20,
@@ -203,7 +210,10 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     if color_scheme:
         fig.update_traces(line_color=color_scheme)
     
-    return fig
+    # Add download button
+    download_button = create_download_button(data[[x_col, y_col]], f"{title.lower().replace(' ', '_')}", "Download Data")
+    
+    return fig, download_button
 
 def main():
     # Dashboard Header
