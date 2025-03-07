@@ -326,17 +326,18 @@ def main():
     # First Row of Charts
     col1, col2 = st.columns(2)
     with col1:
-        moisture_chart = create_chart(
-            data, "created_at", "field1",
-            "Soil Moisture Trends",
-            "Moisture (%)",
-            "#00BCD4",
-            [60, 70]
-        )
-        st.plotly_chart(moisture_chart, use_container_width=True)
+    moisture_chart, moisture_download = create_chart(
+        data, "created_at", "field1",
+        "Soil Moisture Trends",
+        "Moisture (%)",
+        "#00BCD4",
+        [60, 70]
+    )
+    st.plotly_chart(moisture_chart, use_container_width=True)
+    st.markdown(moisture_download, unsafe_allow_html=True)
 
     with col2:
-        temp_chart = create_chart(
+        temp_chart, temp_download = create_chart(
             data, "created_at", "field2",
             "Temperature Variations",
             "Temperature (°C)",
@@ -344,6 +345,7 @@ def main():
             [24, 27]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
+        st.markdown(temp_download, unsafe_allow_html=True)
 
     # Second Row of Charts
     col3, col4 = st.columns(2)
