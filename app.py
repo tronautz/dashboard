@@ -128,7 +128,7 @@ def fetch_data(start_date=None, end_date=None):
                 "field1": "Soil Moisture",
                 "field2": "Temperature",
                 "field3": "pH",
-                "field4 ": "Conductivity",
+                "field4": "Conductivity",
                 "field5": "Nitrogen",
                 "field6": "Phosphorus",
                 "field7": "Kalium"
