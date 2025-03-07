@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import requests
 import plotly.express as px
-import base64
 from streamlit_autorefresh import st_autorefresh
 from datetime import datetime, timedelta
 
@@ -14,7 +13,7 @@ BASE_URL = f"https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key
 # Streamlit Configuration
 st.set_page_config(
     page_title="Smart Soil Monitor",
-    page_icon="🌱",
+    page_icon="ðŸŒ±",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -176,22 +175,16 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     
     return fig
 
-def create_download_button(data, filename, button_text):
-    csv = data.to_csv(index=False)
-    b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}.csv">{button_text}</a>'
-    return href
-
 def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=None):
     fig = px.area(
         data,
         x=x_col,
         y=y_col,
         title=title,
-        markers=True
+        markers=True  # Menambahkan titik pada data chart
     )
     
-    fig.update_traces(mode='lines+markers')
+    fig.update_traces(mode='lines+markers')  # Menampilkan garis dan titik
     fig.update_layout(
         title_x=0.5,
         title_font_size=20,
@@ -210,16 +203,13 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     if color_scheme:
         fig.update_traces(line_color=color_scheme)
     
-    # Add download button
-    download_button = create_download_button(data[[x_col, y_col]], f"{title.lower().replace(' ', '_')}", "Download Data")
-    
-    return fig, download_button
+    return fig
 
 def main():
     # Dashboard Header
     st.markdown("""
         <div class="dashboard-header">
-            <h1>🌱 Smart Soil Monitoring System</h1>
+            <h1>ðŸŒ± Smart Soil Monitoring System</h1>
             <p>Real-time soil quality monitoring dashboard</p>
         </div>
     """, unsafe_allow_html=True)
@@ -272,24 +262,24 @@ def main():
             else:  # Last 30 Days
                 start_datetime = end_datetime - timedelta(days=30)
         
-        st.button("🔄 Refresh Data")
+        st.button("ðŸ”„ Refresh Data")
 
     # Fetch and process data
     data = fetch_data(start_datetime, end_datetime)
     if data.empty:
-        st.error("⚠️ No data available for the selected time range!")
+        st.error("âš ï¸ No data available for the selected time range!")
         return
 
     # Current Metrics Section
-    st.subheader("📊 Current Readings")
+    st.subheader("ðŸ“Š Current Readings")
     
     # First row - 4 columns
     first_row_cols = st.columns(4)
     first_row_metrics = [
-        ("Soil Moisture 💧", f"{data['field1'].iloc[-1]:.1f}%", "60-80%"),
-        ("Temperature 🌡️", f"{data['field2'].iloc[-1]:.1f}°C", "22-26°C"),
-        ("pH Level 🧪", f"{data['field3'].iloc[-1]:.1f}", "6.0-7.0"),
-        ("Conductivity ⚡", f"{data['field4'].iloc[-1]:.1f} µS/cm", "40-65 µS/cm")
+        ("Soil Moisture ðŸ’§", f"{data['field1'].iloc[-1]:.1f}%", "60-80%"),
+        ("Temperature ðŸŒ¡ï¸", f"{data['field2'].iloc[-1]:.1f}Â°C", "22-26Â°C"),
+        ("pH Level ðŸ§ª", f"{data['field3'].iloc[-1]:.1f}", "6.0-7.0"),
+        ("Conductivity âš¡", f"{data['field4'].iloc[-1]:.1f} ÂµS/cm", "40-65 ÂµS/cm")
     ]
     
     for col, (label, value, ideal) in zip(first_row_cols, first_row_metrics):
@@ -305,9 +295,9 @@ def main():
     # Second row - 3 columns
     second_row_cols = st.columns(3)
     second_row_metrics = [
-        ("Nitrogen 🌿", f"{data['field5'].iloc[-1]:.1f} mg/L", "200-300 mg/L"),
-        ("Phosphorus 🍃", f"{data['field6'].iloc[-1]:.1f} mg/L", "190-400 mg/L"),
-        ("Kalium 🌱", f"{data['field7'].iloc[-1]:.1f} mg/L", "190-400 mg/L")
+        ("Nitrogen ðŸŒ¿", f"{data['field5'].iloc[-1]:.1f} mg/L", "200-300 mg/L"),
+        ("Phosphorus ðŸƒ", f"{data['field6'].iloc[-1]:.1f} mg/L", "190-400 mg/L"),
+        ("Kalium ðŸŒ±", f"{data['field7'].iloc[-1]:.1f} mg/L", "190-400 mg/L")
     ]
     
     for col, (label, value, ideal) in zip(second_row_cols, second_row_metrics):
@@ -321,31 +311,29 @@ def main():
             """, unsafe_allow_html=True)
 
     # Charts
-    st.subheader("📈 Sensor Readings Over Time")
+    st.subheader("ðŸ“ˆ Sensor Readings Over Time")
     
     # First Row of Charts
     col1, col2 = st.columns(2)
     with col1:
-    moisture_chart, moisture_download = create_chart(
-        data, "created_at", "field1",
-        "Soil Moisture Trends",
-        "Moisture (%)",
-        "#00BCD4",
-        [60, 70]
-    )
-    st.plotly_chart(moisture_chart, use_container_width=True)
-    st.markdown(moisture_download, unsafe_allow_html=True)
+        moisture_chart = create_chart(
+            data, "created_at", "field1",
+            "Soil Moisture Trends",
+            "Moisture (%)",
+            "#00BCD4",
+            [60, 70]
+        )
+        st.plotly_chart(moisture_chart, use_container_width=True)
 
     with col2:
-        temp_chart, temp_download = create_chart(
+        temp_chart = create_chart(
             data, "created_at", "field2",
             "Temperature Variations",
-            "Temperature (°C)",
+            "Temperature (Â°C)",
             "#FF5722",
             [24, 27]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
-        st.markdown(temp_download, unsafe_allow_html=True)
 
     # Second Row of Charts
     col3, col4 = st.columns(2)
@@ -363,14 +351,14 @@ def main():
         conductivity_chart = create_chart(
             data, "created_at", "field4",
             "Soil Conductivity",
-            "Conductivity (µS/cm)",
+            "Conductivity (ÂµS/cm)",
             "#FFC107",
             [40, 45]
         )
         st.plotly_chart(conductivity_chart, use_container_width=True)
 
     # NPK Analysis Section
-    st.subheader("🧪 NPK Analysis")
+    st.subheader("ðŸ§ª NPK Analysis")
     npk_cols = st.columns(3)
     
     with npk_cols[0]:
