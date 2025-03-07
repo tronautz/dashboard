@@ -1,3 +1,6 @@
+**Berikut adalah kode lengkap yang telah dimodifikasi untuk menampilkan data di chart dengan maksimal dua angka di belakang koma:**
+
+```python
 import streamlit as st
 import pandas as pd
 import requests
@@ -254,10 +257,10 @@ def main():
     
     first_row_cols = st.columns(4)
     first_row_metrics = [
-        ("Soil Moisture 💧", f"{data['field1'].iloc[-1]:.1f}%", "60-80%"),
-        ("Temperature 🌡️", f"{data['field2'].iloc[-1]:.1f}°C", "22-26°C"),
-        ("pH Level 🧪", f"{data['field3'].iloc[-1]:.1f}", "6.0-7.0"),
-        ("Conductivity ⚡", f"{data['field4'].iloc[-1]:.1f} µS/cm", "40-65 µS/cm")
+        ("Soil Moisture 💧", f"{data['field1'].iloc[-1]:.2f}%", "60-80%"),
+        ("Temperature 🌡️", f"{data['field2'].iloc[-1]:.2f}°C", "22-26°C"),
+        ("pH Level 🧪", f"{data['field3'].iloc[-1]:.2f}", "6.0-7.0"),
+        ("Conductivity ⚡", f"{data['field4'].iloc[-1]:.2f} µS/cm", "40-65 µS/cm")
     ]
     
     for col, (label, value, ideal) in zip(first_row_cols, first_row_metrics):
@@ -273,9 +276,9 @@ def main():
     # Second row - 3 columns
     second_row_cols = st.columns(3)
     second_row_metrics = [
-        ("Nitrogen 🌿", f"{data['field5'].iloc[-1]:.1f} mg/L", "200-300 mg/L"),
-        ("Phosphorus 🍃", f"{data['field6'].iloc[-1]:.1f} mg/L", "190-400 mg/L"),
-        ("Kalium 🌱", f"{data['field7'].iloc[-1]:.1f} mg/L", "190-400 mg/L")
+        ("Nitrogen 🌿", f"{data['field5'].iloc[-1]:.2f} mg/L", "200-300 mg/L"),
+        ("Phosphorus 🍃", f"{data['field6'].iloc[-1]:.2f} mg/L", "190-400 mg/L"),
+        ("Kalium 🌱", f"{data['field7'].iloc[-1]:.2f} mg/L", "190-400 mg/L")
     ]
     
     for col, (label, value, ideal) in zip(second_row_cols, second_row_metrics):
@@ -369,7 +372,7 @@ def main():
         kalium_chart = create_chart(
             data, "created_at", "field7",
             "Kalium Levels",
- "Kalium (mg/L)",
+            "Kalium (mg/L)",
             "#3F51B5",
             [300, 400]
         )
