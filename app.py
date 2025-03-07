@@ -1,3 +1,6 @@
+Berikut adalah kode lengkap yang telah dimodifikasi agar setiap data dari setiap chart dapat diunduh dalam format CSV. Saya telah menambahkan tombol untuk mengunduh data CSV di bawah setiap chart.
+
+```python
 import streamlit as st
 import pandas as pd
 import requests
@@ -128,7 +131,7 @@ def fetch_data(start_date=None, end_date=None):
                 "field1": "Soil Moisture",
                 "field2": "Temperature",
                 "field3": "pH",
-                "field4": "Conductivity",
+                "field4 ": "Conductivity",
                 "field5": "Nitrogen",
                 "field6": "Phosphorus",
                 "field7": "Kalium"
@@ -152,9 +155,11 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
         data,
         x=x_col,
         y=y_col,
-        title=title
+        title=title,
+        markers=True
     )
     
+    fig.update_traces(mode='lines+markers')
     fig.update_layout(
         title_x=0.5,
         title_font_size=20,
@@ -175,35 +180,14 @@ def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=
     
     return fig
 
-def create_chart(data, x_col, y_col, title, y_label, color_scheme=None, range_y=None):
-    fig = px.area(
-        data,
-        x=x_col,
-        y=y_col,
-        title=title,
-        markers=True  # Menambahkan titik pada data chart
+def download_csv(data, filename):
+    csv = data.to_csv(index=False)
+    st.download_button(
+        label="Download CSV",
+        data=csv,
+        file_name=filename,
+        mime='text/csv'
     )
-    
-    fig.update_traces(mode='lines+markers')  # Menampilkan garis dan titik
-    fig.update_layout(
-        title_x=0.5,
-        title_font_size=20,
-        xaxis_title="Time",
-        yaxis_title=y_label,
-        template="plotly_dark",
-        height=400,
-        margin=dict(l=20, r=20, t=40, b=20),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-    )
-    
-    if range_y:
-        fig.update_yaxes(range=range_y)
-    
-    if color_scheme:
-        fig.update_traces(line_color=color_scheme)
-    
-    return fig
 
 def main():
     # Dashboard Header
@@ -214,9 +198,8 @@ def main():
         </div>
     """, unsafe_allow_html=True)
 
-       # Sidebar Configuration
+    # Sidebar Configuration
     with st.sidebar:
-        # Create two columns for the logos
         logo_col1, logo_col2 = st.columns(2)
         
         with logo_col1:
@@ -227,7 +210,6 @@ def main():
             
         st.title("Dashboard Controls")
         
-        # Time range selection
         time_range = st.selectbox(
             "Select Time Range",
             ["Last 24 Hours", "Last 2 Days", "Last 3 Days", "Last 4 Days", "Last 5 Days", "Last 6 Days", "Last 7 Days", "Last 14 Days", "Last 30 Days", "Custom Range"]
@@ -273,7 +255,6 @@ def main():
     # Current Metrics Section
     st.subheader("📊 Current Readings")
     
-    # First row - 4 columns
     first_row_cols = st.columns(4)
     first_row_metrics = [
         ("Soil Moisture 💧", f"{data['field1'].iloc[-1]:.1f}%", "60-80%"),
@@ -324,6 +305,7 @@ def main():
             [60, 70]
         )
         st.plotly_chart(moisture_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field1']], 'soil_moisture.csv')
 
     with col2:
         temp_chart = create_chart(
@@ -334,6 +316,7 @@ def main():
             [24, 27]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field2']], 'temperature.csv')
 
     # Second Row of Charts
     col3, col4 = st.columns(2)
@@ -346,6 +329,7 @@ def main():
             [0, 8]
         )
         st.plotly_chart(ph_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field3']], 'ph_level.csv')
 
     with col4:
         conductivity_chart = create_chart(
@@ -356,6 +340,7 @@ def main():
             [40, 45]
         )
         st.plotly_chart(conductivity_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field4']], 'conductivity.csv')
 
     # NPK Analysis Section
     st.subheader("🧪 NPK Analysis")
@@ -370,6 +355,7 @@ def main():
             [100, 300]
         )
         st.plotly_chart(nitrogen_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field5']], 'nitrogen.csv')
 
     with npk_cols[1]:
         phosphorus_chart = create_chart(
@@ -380,16 +366,18 @@ def main():
             [300, 400]
         )
         st.plotly_chart(phosphorus_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field6']], 'phosphorus.csv')
 
     with npk_cols[2]:
         kalium_chart = create_chart(
             data, "created_at", "field7",
             "Kalium Levels",
-            "Kalium (mg/L)",
+ "Kalium (mg/L)",
             "#3F51B5",
             [300, 400]
         )
         st.plotly_chart(kalium_chart, use_container_width=True)
+        download_csv(data[['created_at', 'field7']], 'kalium.csv')
 
     # Footer
     st.markdown("""
