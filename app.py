@@ -311,7 +311,7 @@ def main():
             "Temperature Variations",
             "Temperature (°C)",
             "#FF5722",
-            [0, 50]
+            [0, 100]
         )
         st.plotly_chart(temp_chart, use_container_width=True)
         download_csv(data[['created_at', 'field2']], 'temperature.csv')
