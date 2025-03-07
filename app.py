@@ -1,6 +1,4 @@
-**Berikut adalah kode lengkap yang telah dimodifikasi untuk menampilkan data di chart dengan maksimal dua angka di belakang koma:**
 
-```python
 import streamlit as st
 import pandas as pd
 import requests
