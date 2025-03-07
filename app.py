@@ -1,6 +1,3 @@
-Berikut adalah kode lengkap yang telah dimodifikasi agar setiap data dari setiap chart dapat diunduh dalam format CSV. Saya telah menambahkan tombol untuk mengunduh data CSV di bawah setiap chart.
-
-```python
 import streamlit as st
 import pandas as pd
 import requests
