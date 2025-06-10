@@ -297,7 +297,7 @@ def main():
     with col1:
         moisture_chart = create_chart(
             data, "created_at", "field1",
-            "Soil Moisture Trends",
+            "Soil Moisture",
             "Moisture (%)",
             "#00BCD4",
             [0, 100]
@@ -308,7 +308,7 @@ def main():
     with col2:
         temp_chart = create_chart(
             data, "created_at", "field2",
-            "Temperature Variations",
+            "Soil Temperature",
             "Temperature (°C)",
             "#FF5722",
             [0, 100]
@@ -321,7 +321,7 @@ def main():
     with col3:
         ph_chart = create_chart(
             data, "created_at", "field3",
-            "pH Level Changes",
+            "pH Level",
             "pH Level",
             "#4CAF50",
             [0, 16]
