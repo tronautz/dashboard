@@ -324,7 +324,7 @@ def main():
             "pH Level Changes",
             "pH Level",
             "#4CAF50",
-            [0, 8]
+            [0, 16]
         )
         st.plotly_chart(ph_chart, use_container_width=True)
         download_csv(data[['created_at', 'field3']], 'ph_level.csv')
@@ -335,7 +335,7 @@ def main():
             "Soil Conductivity",
             "Conductivity (µS/cm)",
             "#FFC107",
-            [40, 45]
+            [0, 100]
         )
         st.plotly_chart(conductivity_chart, use_container_width=True)
         download_csv(data[['created_at', 'field4']], 'conductivity.csv')
