@@ -300,7 +300,7 @@ def main():
             "Soil Moisture",
             "Moisture (%)",
             "#00BCD4",
-            [0, 100]
+            [60, 80]
         )
         st.plotly_chart(moisture_chart, use_container_width=True)
         download_csv(data[['created_at', 'field1']], 'soil_moisture.csv')
